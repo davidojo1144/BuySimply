@@ -93,13 +93,14 @@ async function submitLogin() {
       class="hidden w-1/2 flex-col items-center justify-center gap-6 bg-[#f8efff] px-10 py-7 lg:flex"
     >
       <div class="w-full">
-        <img src="/team-achieve-logo.svg" alt="Team Achieve" />
+        <img src="/logo.png" alt="Team Achieve" />
       </div>
 
       <div
-        class="h-[380px] w-full max-w-[620px] rounded-2xl bg-gradient-to-br from-[#d7d7d7] to-[#bfcde0]"
+        class="h-[380px] w-full max-w-[620px] rounded-2xl bg-cover bg-center"
+        style="background-image: url(&quot;/loginimg.png&quot;)"
         role="img"
-        aria-label="Team Achieve banner placeholder image"
+        aria-label="Team Achieve banner image"
       ></div>
 
       <div class="text-center">
@@ -114,11 +115,7 @@ async function submitLogin() {
       class="mx-auto flex w-full max-w-[760px] flex-col justify-center px-6 py-10 lg:w-1/2 lg:max-w-[720px] lg:px-10 lg:py-14"
     >
       <div class="mb-6 flex justify-center lg:hidden">
-        <img
-          class="max-w-[82%]"
-          src="/team-achieve-logo.svg"
-          alt="Team Achieve"
-        />
+        <img class="max-w-[82%]" src="/logo.png" alt="Team Achieve" />
       </div>
 
       <h1
