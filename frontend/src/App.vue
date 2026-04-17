@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Toastify from "toastify-js";
 import { computed, ref } from "vue";
 
 type LoginResponse = {
@@ -33,12 +34,29 @@ const backendUrl = computed(
   () => import.meta.env.VITE_BACKEND_URL ?? "http://localhost:3000",
 );
 
+function showToast(message: string, type: "success" | "error") {
+  Toastify({
+    text: message,
+    duration: 3000,
+    gravity: "top",
+    position: "right",
+    stopOnFocus: true,
+    style: {
+      background:
+        type === "success"
+          ? "linear-gradient(to right, #16a34a, #22c55e)"
+          : "linear-gradient(to right, #dc2626, #ef4444)",
+    },
+  }).showToast();
+}
+
 async function submitLogin() {
   loginError.value = "";
   loginSuccess.value = "";
 
   if (!email.value || !password.value) {
     loginError.value = "Email and password are required.";
+    showToast(loginError.value, "error");
     return;
   }
 
@@ -62,11 +80,13 @@ async function submitLogin() {
 
     if (!response.ok) {
       loginError.value = data.message ?? "Unable to sign in.";
+      showToast(loginError.value, "error");
       return;
     }
 
     if (!isLoginResponse(data)) {
       loginError.value = "Invalid login response.";
+      showToast(loginError.value, "error");
       return;
     }
 
@@ -79,8 +99,10 @@ async function submitLogin() {
     }
 
     loginSuccess.value = "Login successful.";
+    showToast(loginSuccess.value, "success");
   } catch {
     loginError.value = "Network error while trying to sign in.";
+    showToast(loginError.value, "error");
   } finally {
     isLoading.value = false;
   }
@@ -119,12 +141,12 @@ async function submitLogin() {
       </div>
 
       <h1
-        class="m-0 text-center font-serif text-[3rem] text-[#5a1f8f] lg:text-[3.2rem]"
+        class="m-0 text-center font-serif text-[2rem] text-[#5a1f8f] lg:text-[3rem]"
       >
         Welcome Back
       </h1>
       <p
-        class="mb-8 mt-3 text-center text-[1.1rem] text-[#666666] lg:text-[1.35rem]"
+        class="mb-8 mt-3 text-center text-[1rem] text-[#666666] lg:text-[1.35rem]"
       >
         Enter your email address and password to access your account.
       </p>
@@ -160,10 +182,40 @@ async function submitLogin() {
           />
           <button
             type="button"
-            class="w-24 rounded-r-[10px] border border-[#d2d2d2] bg-white text-sm text-[#6e6e6e]"
+            class="flex w-14 items-center justify-center rounded-r-[10px] border border-[#d2d2d2] bg-white text-[#6e6e6e]"
             @click="isPasswordVisible = !isPasswordVisible"
+            :aria-label="isPasswordVisible ? 'Hide password' : 'Show password'"
           >
-            {{ isPasswordVisible ? "Hide" : "Show" }}
+            <svg
+              v-if="isPasswordVisible"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="h-5 w-5"
+            >
+              <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+            <svg
+              v-else
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="h-5 w-5"
+            >
+              <path d="M3 3l18 18" />
+              <path d="M10.6 10.6a3 3 0 0 0 4.2 4.2" />
+              <path
+                d="M9.5 5.1A11 11 0 0 1 12 5c6.5 0 10 7 10 7a16 16 0 0 1-4 4.8"
+              />
+              <path
+                d="M6.6 6.6A16 16 0 0 0 2 12s3.5 7 10 7a10 10 0 0 0 2.5-.3"
+              />
+            </svg>
           </button>
         </div>
 
@@ -197,11 +249,9 @@ async function submitLogin() {
         </button>
       </form>
 
-      <p class="mt-5 text-center text-[1.5rem] text-[#5a5a5a]">
+      <p class="mt-5 text-center text-[1.2rem] text-[#5a5a5a]">
         Don't have an account?
-        <a href="#" class="font-semibold text-[#5a1f8f] no-underline"
-          >Sign up</a
-        >
+        <a href="#" class="font-medium text-[#5a1f8f] no-underline">Sign up</a>
       </p>
     </section>
   </div>
